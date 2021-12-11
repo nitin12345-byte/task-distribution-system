@@ -1,4 +1,3 @@
-
 package com.itt.tds.model;
 
 public class Node {
@@ -8,6 +7,14 @@ public class Node {
     private int portNumber;
     private String ipAddress;
     private String status;
+
+    public Node() {
+        id = 0;
+        name = "";
+        portNumber = 0;
+        ipAddress = "";
+        status = "";
+    }
 
     public long getId() {
         return id;

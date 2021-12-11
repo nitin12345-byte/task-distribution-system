@@ -1,6 +1,7 @@
 package com.itt.tds.db.dao;
 
 import com.itt.tds.model.Task;
+import java.util.List;
 
 public interface ITaskDAO {
 
@@ -11,4 +12,6 @@ public interface ITaskDAO {
     public void delete(long id);
 
     public void updateStatus(long id, String status);
+    
+    public List<Task> getAllTask();
 }

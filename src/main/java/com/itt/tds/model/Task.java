@@ -3,11 +3,20 @@ package com.itt.tds.model;
 public class Task {
 
     private long id;
-    private int userId;
-    private int nodeId;
+    private long clientId;
+    private long nodeId;
     private String status;
     private String result;
     private String filePath;
+
+    public Task() {
+        id = 0;
+        clientId = 0;
+        nodeId = 0;
+        status = "";
+        result = "";
+        filePath = "";
+    }
 
     public long getId() {
         return id;
@@ -17,19 +26,19 @@ public class Task {
         this.id = id;
     }
 
-    public int getUserId() {
-        return userId;
+    public long getClientId() {
+        return clientId;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setClientId(long clientId) {
+        this.clientId = clientId;
     }
 
-    public int getNodeId() {
+    public long getNodeId() {
         return nodeId;
     }
 
-    public void setNodeId(int nodeId) {
+    public void setNodeId(long nodeId) {
         this.nodeId = nodeId;
     }
 

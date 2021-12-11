@@ -5,6 +5,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TaskDAO implements ITaskDAO {
 
@@ -17,12 +20,12 @@ public class TaskDAO implements ITaskDAO {
     @Override
     public void save(Task task) {
 
-        String query = "insert into task(user_id,node_id,status,result,file_path) values(?,?,?,?,?)";
+        String query = "INSERT INTO task(client_id,node_id,status,result,file_path) VALUES(?,?,?,?,?)";
 
         try {
             PreparedStatement preparedStatement = dbConnection.prepareStatement(query);
-            preparedStatement.setInt(1, task.getUserId());
-            preparedStatement.setInt(2, task.getNodeId());
+            preparedStatement.setLong(1, task.getClientId());
+            preparedStatement.setLong(2, task.getNodeId());
             preparedStatement.setString(4, task.getResult());
             preparedStatement.setString(3, task.getStatus());
             preparedStatement.setString(5, task.getFilePath());
@@ -36,7 +39,7 @@ public class TaskDAO implements ITaskDAO {
 
     @Override
     public void delete(long id) {
-        String query = "delete from task where id = ? ";
+        String query = "DELETE FROM task WHERE id = ? ";
         try {
             PreparedStatement preparedStatement = dbConnection.prepareStatement(query);
             preparedStatement.setLong(1, id);
@@ -49,21 +52,21 @@ public class TaskDAO implements ITaskDAO {
     @Override
     public Task getTask(long id) {
 
-        String query = "Select * from task where id = ? ";
-        Task task = null;
+        String query = "SELECT * FROM task WHERE id = ? ";
+        Task task = new Task();
 
         try {
             PreparedStatement preparedStatement = dbConnection.prepareStatement(query);
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
-            task = new Task();
-            task.setId(resultSet.getLong("id"));
-            task.setUserId(resultSet.getInt("user_id"));
-            task.setNodeId(resultSet.getInt("node_id"));
-            task.setFilePath(resultSet.getString("file_path"));
-            task.setResult(resultSet.getString("result"));
-            task.setStatus(resultSet.getString("status"));
-
+            if (resultSet.next()) {
+                task.setId(resultSet.getLong("id"));
+                task.setClientId(resultSet.getLong("client_id"));
+                task.setNodeId(resultSet.getLong("node_id"));
+                task.setFilePath(resultSet.getString("file_path"));
+                task.setResult(resultSet.getString("result"));
+                task.setStatus(resultSet.getString("status"));
+            }
         } catch (SQLException exp) {
             System.out.print(exp);
         }
@@ -73,7 +76,7 @@ public class TaskDAO implements ITaskDAO {
 
     @Override
     public void updateStatus(long id, String status) {
-        String query = "update table task set status = ? where id = ?";
+        String query = "UPDATE task SET status = ? WHERE id = ?";
 
         try {
             PreparedStatement preparedStatement = dbConnection.prepareStatement(query);
@@ -84,5 +87,33 @@ public class TaskDAO implements ITaskDAO {
             System.out.print(ex.getMessage());
         }
 
+    }
+
+    @Override
+    public List<Task> getAllTask() {
+
+        ArrayList<Task> taskList = new ArrayList<>();
+
+        try {
+            String query = "SELECT * FROM task";
+            Statement stm = dbConnection.createStatement();
+            ResultSet resultSet = stm.executeQuery(query);
+
+            while (resultSet.next()) {
+
+                Task task = new Task();
+                task.setId(resultSet.getLong("id"));
+                task.setFilePath(resultSet.getString("file_path"));
+                task.setNodeId(resultSet.getLong("node_id"));
+                task.setResult(resultSet.getString("result"));
+                task.setStatus(resultSet.getString("status"));
+                taskList.add(task);
+
+            }
+
+        } catch (SQLException ex) {
+            System.out.print(ex.getMessage());
+        }
+        return taskList;
     }
 }
