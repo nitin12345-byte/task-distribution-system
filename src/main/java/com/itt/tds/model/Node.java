@@ -1,6 +1,8 @@
-package com.itt.tds.model;
+package com.itt.tds.core.model;
 
-public class Node {
+import java.io.Serializable;
+
+public class Node implements Serializable{
 
     private long id;
     private String name;

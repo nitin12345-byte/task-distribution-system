@@ -1,6 +1,8 @@
-package com.itt.tds.model;
+package com.itt.tds.core.model;
 
-public class Client {
+import java.io.Serializable;
+
+public class Client implements Serializable{
 
     private long id;
     private String ipAddress;

@@ -1,6 +1,8 @@
-package com.itt.tds.model;
+package com.itt.tds.core.model;
 
-public class Task {
+import java.io.Serializable;
+
+public class Task implements Serializable {
 
     private long id;
     private long clientId;
@@ -8,6 +10,15 @@ public class Task {
     private String status;
     private String result;
     private String filePath;
+    private byte[] data;
+
+    public byte[] getData() {
+        return data;
+    }
+
+    public void setData(byte[] data) {
+        this.data = data;
+    }
 
     public Task() {
         id = 0;
@@ -16,6 +27,7 @@ public class Task {
         status = "";
         result = "";
         filePath = "";
+        data = new byte[1];
     }
 
     public long getId() {
