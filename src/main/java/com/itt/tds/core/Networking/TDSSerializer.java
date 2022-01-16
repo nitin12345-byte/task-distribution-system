@@ -1,13 +1,9 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.itt.tds.core.Networking;
 
-/**
- *
- * @author nitin.jangid
- */
-public class TDSSerializer {
-    
+public interface TDSSerializer {
+
+    public String serialize(TDSProtocol tdsProtocol);
+
+    public TDSProtocol deserialize(String protocolString);
+
 }

@@ -1,6 +1,6 @@
 package com.itt.tds.core.Networking;
 
-public class SerializerFactory {
+public class TDSSerializerFactory {
 
     public static TDSSerializer getSerializer(String serializerType) {
 
