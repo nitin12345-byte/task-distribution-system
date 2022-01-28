@@ -1,16 +1,18 @@
 package com.itt.tds.distributor.db.dao;
 
 import com.itt.tds.core.model.Client;
-import java.sql.SQLException;
+import com.itt.tds.distributor.db.exceptions.DBException;
+import com.itt.tds.distributor.db.exceptions.RecordAlreadyExistException;
+import com.itt.tds.distributor.db.exceptions.RecordNotFoundException;
 import java.util.List;
 
 public interface IClientDAO {
 
-    public void save(Client user) throws SQLException;
+    public String save(Client user) throws RecordAlreadyExistException, DBException;
 
-    public Client getClient(long id) throws SQLException;
+    public Client getClient(String id) throws RecordNotFoundException, DBException;
 
-    public void delete(long id) throws SQLException;
+    public void delete(String id) throws DBException;
 
-    public List<Client> getAllClients() throws SQLException;
+    public List<Client> getAllClients() throws DBException;
 }

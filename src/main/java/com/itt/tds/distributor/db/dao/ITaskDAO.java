@@ -1,18 +1,20 @@
 package com.itt.tds.distributor.db.dao;
 
 import com.itt.tds.core.model.Task;
-import java.sql.SQLException;
+import com.itt.tds.distributor.db.exceptions.DBException;
+import com.itt.tds.distributor.db.exceptions.RecordAlreadyExistException;
+import com.itt.tds.distributor.db.exceptions.RecordNotFoundException;
 import java.util.List;
 
 public interface ITaskDAO {
 
-    public void save(Task t) throws SQLException;
+    public String save(Task t) throws DBException, RecordAlreadyExistException;
 
-    public Task getTask(long id) throws SQLException;
+    public Task getTask(String id) throws DBException, RecordNotFoundException;
 
-    public void delete(long id) throws SQLException;
+    public void delete(String id) throws DBException;
 
-    public void updateStatus(long id, String status) throws SQLException;
+    public void updateStatus(String id, String status) throws DBException;
 
-    public List<Task> getAllTask() throws SQLException;
+    public List<Task> getAllTask(String clientId) throws DBException;
 }
