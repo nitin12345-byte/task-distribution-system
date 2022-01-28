@@ -1,72 +1,73 @@
 package com.itt.tds.core.model;
 
+import com.itt.tds.core.enums.TaskStatus;
 import java.io.Serializable;
 
 public class Task implements Serializable {
 
-    private long id;
-    private long clientId;
-    private long nodeId;
-    private String status;
-    private String result;
+    private String id;
+    private String clientId;
+    private String nodeId;
+    private TaskStatus status;
+    private TaskResult result;
     private String filePath;
-    private byte[] data;
+    private String data;
 
-    public byte[] getData() {
+    public String getData() {
         return data;
     }
 
-    public void setData(byte[] data) {
+    public void setData(String data) {
         this.data = data;
     }
 
     public Task() {
-        id = 0;
-        clientId = 0;
-        nodeId = 0;
-        status = "";
-        result = "";
+        id = "";
+        clientId = "";
+        nodeId = "";
+        status = TaskStatus.PENDING;
+        result = new TaskResult();
         filePath = "";
-        data = new byte[1];
+        data = "";
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public long getClientId() {
+    public String getClientId() {
         return clientId;
     }
 
-    public void setClientId(long clientId) {
+    public void setClientId(String clientId) {
         this.clientId = clientId;
     }
 
-    public long getNodeId() {
+    public String getNodeId() {
         return nodeId;
     }
 
-    public void setNodeId(long nodeId) {
+    public void setNodeId(String nodeId) {
         this.nodeId = nodeId;
     }
 
-    public String getStatus() {
+    public TaskStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(TaskStatus status) {
         this.status = status;
     }
 
-    public String getResult() {
+    public TaskResult getResult() {
         return result;
     }
 
-    public void setResult(String result) {
+    public void setResult(TaskResult result) {
         this.result = result;
     }
 

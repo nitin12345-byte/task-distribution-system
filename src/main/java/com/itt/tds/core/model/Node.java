@@ -2,27 +2,27 @@ package com.itt.tds.core.model;
 
 import java.io.Serializable;
 
-public class Node implements Serializable{
+public class Node implements Serializable {
 
-    private long id;
+    private String id;
     private String name;
     private int portNumber;
     private String ipAddress;
     private String status;
 
     public Node() {
-        id = 0;
+        id = "";
         name = "";
         portNumber = 0;
         ipAddress = "";
         status = "";
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
