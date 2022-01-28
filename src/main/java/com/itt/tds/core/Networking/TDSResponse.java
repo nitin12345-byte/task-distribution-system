@@ -1,13 +1,19 @@
 package com.itt.tds.core.Networking;
 
-import java.io.Serializable;
+import java.util.HashMap;
 
-public class TDSResponse extends TDSProtocol implements Serializable {
+public class TDSResponse extends TDSProtocol {
 
     private int status;
     private int errorCode;
     private String errorMessage;
+    private HashMap<String, Object> values;
 
+    public TDSResponse(){
+        values = new HashMap();
+        setProtocolType("response");
+    }
+    
     public int getStatus() {
         return status;
     }
@@ -32,11 +38,11 @@ public class TDSResponse extends TDSProtocol implements Serializable {
         this.errorMessage = errorMessage;
     }
 
-    public String getValue(String key) {
-        return getHeader(key);
+    public Object getValue(String key) {
+        return values.get(key);
     }
 
-    public void setValue(String key, String value) {
-        setHeader(key, value);
+    public void setValue(String key, Object value) {
+        values.put(key, value);
     }
 }

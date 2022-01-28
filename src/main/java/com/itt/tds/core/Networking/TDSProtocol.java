@@ -6,31 +6,19 @@ public class TDSProtocol {
 
     private String destinationIp;
     private int destinationPort;
-    private String SourceIp;
-    private int sourcePort;
-    private String protocolVersion;
-    private String protocolFormat;
-    private HashMap<String, String> headers;
-    private Object body;
+    private HashMap<String, Object> headers;
+    private String protocolType;
+
+    public String getProtocolType() {
+        return protocolType;
+    }
+
+    protected void setProtocolType(String protocolType) {
+        this.protocolType = protocolType;
+    }
 
     public TDSProtocol() {
         this.headers = new HashMap<>();
-    }
-
-    public String getProtocolVersion() {
-        return protocolVersion;
-    }
-
-    public void setProtocolVersion(String protocolVersion) {
-        this.protocolVersion = protocolVersion;
-    }
-
-    public String getProtocolFormat() {
-        return protocolFormat;
-    }
-
-    public void setProtocolFormat(String protocolFormat) {
-        this.protocolFormat = protocolFormat;
     }
 
     public String getDestinationIp() {
@@ -49,23 +37,7 @@ public class TDSProtocol {
         this.destinationPort = destinationPort;
     }
 
-    public String getSourceIp() {
-        return SourceIp;
-    }
-
-    public void setSourceIp(String SourceIp) {
-        this.SourceIp = SourceIp;
-    }
-
-    public int getSourcePort() {
-        return sourcePort;
-    }
-
-    public void setSourcePort(int sourcePort) {
-        this.sourcePort = sourcePort;
-    }
-
-    public String getHeader(String key) {
+    public Object getHeader(String key) {
         return headers.get(key);
     }
 
@@ -73,11 +45,4 @@ public class TDSProtocol {
         headers.put(key, value);
     }
 
-    public Object getBody() {
-        return body;
-    }
-
-    public void setBody(Object body) {
-        this.body = body;
-    }
 }
