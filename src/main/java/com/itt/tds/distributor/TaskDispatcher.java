@@ -11,6 +11,7 @@ import com.itt.tds.distributor.db.dao.TaskDAO;
 import com.itt.tds.distributor.db.exceptions.DBException;
 import java.sql.Connection;
 import java.util.List;
+import java.util.logging.Level;
 
 public class TaskDispatcher implements Runnable {
 
@@ -35,10 +36,9 @@ public class TaskDispatcher implements Runnable {
         while (true) {
             Task task;
             try {
-                if ((task = (Task) queue.peek()) != null) {
+                if ((task = (Task) queue.poll()) != null) {
                     nodeList = nodeDAO.getAllAvailableNodesFor(Utils.getCapabilityFromFileName(task.getFilePath()));
                     if (nodeList.size() > 0) {
-                        queue.poll();
                         Node node = nodeList.get(0);
                         taskDAO.updateNodeId(task.getId(), node.getId());
                         nodeDAO.updateStatus(node.getId(), NodeStatus.BUSY.name());
@@ -46,10 +46,14 @@ public class TaskDispatcher implements Runnable {
                         Thread thread = new Thread(nodeCommunicationHandler);
                         thread.start();
                         logger.logInfo("run", String.format("Task(%s) is assigned to Node(%s)", task.getId(), node.getId()));
+                    } else {
+                        queue.put(task);
                     }
                 }
             } catch (DBException exception) {
                 logger.logError("run", "Database error occured", exception);
+            } catch (InterruptedException ex) {
+                logger.logError("run", "UnknowError");
             }
         }
     }
