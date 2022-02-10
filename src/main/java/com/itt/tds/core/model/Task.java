@@ -12,6 +12,16 @@ public class Task implements Serializable {
     private TaskResult result;
     private String filePath;
     private String data;
+    private String dateTime;
+
+    public String getDateTime() {
+        return dateTime;
+    }
+
+    public void setDateTime(String dateTime) {
+        this.dateTime = dateTime;
+    }
+
 
     public String getData() {
         return data;

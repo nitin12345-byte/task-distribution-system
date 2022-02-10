@@ -24,16 +24,16 @@ public class NodeDAO implements INodeDAO {
     @Override
     public String save(Node node) throws RecordAlreadyExistException, DBException {
 
-        String id = "";
+        String id = Constants.EMPTY_STRING;
         try {
-            String query = "INSERT INTO node(id,name,ip_address,port_number,status) VALUES(?,?,?,?,?)";
+            String query = "INSERT INTO node(id,host_name,ip_address,port_number,status) VALUES(?,?,?,?,?)";
             PreparedStatement preparedStatement = dbConnection.prepareStatement(query);
 
             UUID uuid = UUID.randomUUID();
             id = uuid.toString();
 
             preparedStatement.setString(1, id);
-            preparedStatement.setString(2, node.getName());
+            preparedStatement.setString(2, node.getHostName());
             preparedStatement.setString(3, node.getIpAddress());
             preparedStatement.setInt(4, node.getPortNumber());
             preparedStatement.setString(5, node.getStatus());
@@ -72,7 +72,7 @@ public class NodeDAO implements INodeDAO {
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 node.setId(resultSet.getString(Constants.ID));
-                node.setName(resultSet.getString(Constants.NAME));
+                node.setHostName(resultSet.getString(Constants.HOST_NAME));
                 node.setIpAddress(resultSet.getString(Constants.IP_ADDRESS));
                 node.setPortNumber(resultSet.getInt(Constants.PORT_NUMBER));
                 node.setStatus(resultSet.getString(Constants.STATUS));
@@ -120,7 +120,7 @@ public class NodeDAO implements INodeDAO {
         ArrayList<Node> nodeList = new ArrayList<>();
 
         try {
-            String query = "SELECT node.id,node.name,node.status,node.port_number,"
+            String query = "SELECT node.id,node.host_name,node.status,node.port_number,"
                     + "node.ip_address,capability.name FROM node INNER "
                     + "JOIN capability ON node.status = 'AVAILABLE'"
                     + " AND capability.name = ?";
@@ -135,7 +135,7 @@ public class NodeDAO implements INodeDAO {
                 node.setIpAddress(resultSet.getString(Constants.IP_ADDRESS));
                 node.setPortNumber(resultSet.getInt(Constants.PORT_NUMBER));
                 node.setStatus(resultSet.getString(Constants.STATUS));
-                node.setName(resultSet.getString(Constants.NAME));
+                node.setHostName(resultSet.getString(Constants.HOST_NAME));
                 nodeList.add(node);
             }
         } catch (SQLException exception) {
@@ -153,7 +153,7 @@ public class NodeDAO implements INodeDAO {
         try {
 
             String query = "SELECT node.id,node.port_number,node.ip_address,"
-                    + "node.status,node.name,capability.name FROM node INNER "
+                    + "node.status,node.host_name,capability.name FROM node INNER "
                     + "JOIN capability ON node.status IN ('BUSY','AVAILABLE')"
                     + " AND capability.name = ?";
 
@@ -167,7 +167,7 @@ public class NodeDAO implements INodeDAO {
                 node.setIpAddress(resultSet.getString(Constants.IP_ADDRESS));
                 node.setPortNumber(resultSet.getInt(Constants.PORT_NUMBER));
                 node.setStatus(resultSet.getString(Constants.STATUS));
-                node.setName(resultSet.getString(Constants.NAME));
+                node.setHostName(resultSet.getString(Constants.HOST_NAME));
                 nodeList.add(node);
             }
         } catch (SQLException exception) {

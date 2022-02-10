@@ -3,6 +3,7 @@ package com.itt.tds.distributor;
 import com.itt.tds.core.Constants;
 import com.itt.tds.core.Networking.TDSRequest;
 import com.itt.tds.core.Networking.TDSResponse;
+import com.itt.tds.core.enums.ResponseStatus;
 import com.itt.tds.core.enums.TaskStatus;
 import com.itt.tds.core.enums.TDSResponseErrorCode;
 import com.itt.tds.core.logging.LogManager;
@@ -77,12 +78,12 @@ public class ClientController implements TDSController {
         ClientDAO clientDAO = new ClientDAO(dbConnection);
         try {
             String clientId = clientDAO.save(client);
-            tdsResponse.setStatus(1);
+            tdsResponse.setStatus(ResponseStatus.OK.getValue());
             tdsResponse.setValue(Constants.CLIENT_ID, clientId);
             logger.logInfo("registerClient", "Client is registered successfully");
 
         } catch (DBException exception) {
-            tdsResponse.setStatus(0);
+            tdsResponse.setStatus(ResponseStatus.FAIL.getValue());
             tdsResponse.setErrorCode(TDSResponseErrorCode.DATABASE_ERROR.getValue());
             tdsResponse.setErrorMessage(exception.getMessage());
             logger.logInfo("registerClient", "Error occured while registering cliend", exception);
@@ -96,9 +97,9 @@ public class ClientController implements TDSController {
         ClientDAO clientDAO = new ClientDAO(dbConnection);
         try {
             clientDAO.delete(clientId);
-            tdsResponse.setStatus(1);
+            tdsResponse.setStatus(ResponseStatus.OK.getValue());
         } catch (DBException exception) {
-            tdsResponse.setStatus(0);
+            tdsResponse.setStatus(ResponseStatus.FAIL.getValue());
             tdsResponse.setErrorCode(TDSResponseErrorCode.DATABASE_ERROR.getValue());
             tdsResponse.setErrorMessage(exception.getMessage());
         }
@@ -128,21 +129,21 @@ public class ClientController implements TDSController {
                     Queue queue = Queue.getInstance();
                     queue.put(task);
                     taskDAO.updateStatus(taskId, TaskStatus.QUEUE.name());
-                    tdsResponse.setStatus(1);
+                    tdsResponse.setStatus(ResponseStatus.OK.getValue());
                     tdsResponse.setValue(Constants.TASK_ID, taskId);
                     logger.logInfo("addTask", "Task has been added successfuly in the database");
                 } else {
-                    tdsResponse.setStatus(0);
+                    tdsResponse.setStatus(ResponseStatus.FAIL.getValue());
                     tdsResponse.setErrorCode(TDSResponseErrorCode.NODE_NOT_AVAILABLE.getValue());
                     tdsResponse.setErrorMessage("No node is available to execute the task");
                 }
             } else {
-                tdsResponse.setStatus(0);
+                tdsResponse.setStatus(ResponseStatus.FAIL.getValue());
                 tdsResponse.setErrorCode(TDSResponseErrorCode.EXECUTOR_NOT_AVAILABLE.getValue());
                 tdsResponse.setErrorMessage("System does not support the execution of this file");
             }
         } catch (DBException | InterruptedException exception) {
-            tdsResponse.setStatus(0);
+            tdsResponse.setStatus(ResponseStatus.FAIL.getValue());
             tdsResponse.setErrorMessage(exception.getMessage());
             tdsResponse.setErrorCode(TDSResponseErrorCode.DATABASE_ERROR.getValue());
             logger.logError("addTask", "Unknow error occured", exception);
@@ -157,10 +158,10 @@ public class ClientController implements TDSController {
         TaskDAO taskDAO = new TaskDAO(dbConnection);
         try {
             List<Task> taskList = taskDAO.getAllTask(clientId);
-            tdsResponse.setStatus(1);
+            tdsResponse.setStatus(ResponseStatus.OK.getValue());
             tdsResponse.setValue(Constants.TASKS, taskList);
         } catch (DBException exception) {
-            tdsResponse.setStatus(0);
+            tdsResponse.setStatus(ResponseStatus.FAIL.getValue());
             tdsResponse.setErrorMessage(exception.getMessage());
             tdsResponse.setErrorCode(TDSResponseErrorCode.DATABASE_ERROR.getValue());
         }
@@ -175,7 +176,7 @@ public class ClientController implements TDSController {
         try {
             Task task = taskDAO.getTask(taskId);
             TaskResult taskResult = task.getResult();
-            tdsResponse.setStatus(1);
+            tdsResponse.setStatus(ResponseStatus.OK.getValue());
             tdsResponse.setValue(Constants.TASK_ID, taskResult.getTaskId());
             tdsResponse.setValue(Constants.ERROR_CODE, taskResult.getErrorCode());
             tdsResponse.setValue(Constants.ERROR_MESSAGE, taskResult.getErrorMessage());
@@ -184,13 +185,13 @@ public class ClientController implements TDSController {
 
         } catch (RecordNotFoundException exception) {
             System.out.print(exception);
-            tdsResponse.setStatus(0);
+            tdsResponse.setStatus(ResponseStatus.FAIL.getValue());
             tdsResponse.setErrorMessage(exception.getMessage());
             tdsResponse.setErrorCode(TDSResponseErrorCode.RECORD_NOT_AVAILABLE.getValue());
             logger.logInfo("getTaskResult", "The requested record is not found");
 
         } catch (DBException exception) {
-            tdsResponse.setStatus(0);
+            tdsResponse.setStatus(ResponseStatus.FAIL.getValue());
             tdsResponse.setErrorMessage(exception.getMessage());
             tdsResponse.setErrorCode(TDSResponseErrorCode.DATABASE_ERROR.getValue());
             logger.logError("getTaskResult", "Unknown error occured", exception);
@@ -205,11 +206,11 @@ public class ClientController implements TDSController {
         TaskDAO taskDAO = new TaskDAO(dbConnection);
         try {
             Task task = taskDAO.getTask(taskId);
-            tdsResponse.setStatus(1);
+            tdsResponse.setStatus(ResponseStatus.OK.getValue());
             tdsResponse.setValue(Constants.STATUS, task.getStatus().name());
             logger.logInfo("getTaskSatus", "task status retrived successfully");
         } catch (DBException exception) {
-            tdsResponse.setStatus(0);
+            tdsResponse.setStatus(ResponseStatus.FAIL.getValue());
             tdsResponse.setErrorMessage(exception.getMessage());
             tdsResponse.setErrorCode(TDSResponseErrorCode.DATABASE_ERROR.getValue());
             logger.logError("getTaskStatus", "Database error occured", exception);

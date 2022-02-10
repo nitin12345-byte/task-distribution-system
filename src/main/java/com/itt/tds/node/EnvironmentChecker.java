@@ -55,7 +55,7 @@ public class EnvironmentChecker {
 
     private boolean checkCPPEnvironment() {
         try {
-            Runtime.getRuntime().exec("gcc -verison");
+            Runtime.getRuntime().exec("g++ -verison");
             return true;
         } catch (IOException ex) {
         }
@@ -65,7 +65,7 @@ public class EnvironmentChecker {
 
     private boolean checkPythonEnvironment() {
         try {
-            Runtime.getRuntime().exec("python -version");
+            Runtime.getRuntime().exec("py");
             return true;
         } catch (IOException ex) {
         }

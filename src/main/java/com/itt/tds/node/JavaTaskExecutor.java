@@ -1,5 +1,6 @@
 package com.itt.tds.node;
 
+import com.itt.tds.core.Constants;
 import com.itt.tds.core.enums.TaskResultErrorCode;
 import com.itt.tds.core.logging.LogManager;
 import com.itt.tds.core.logging.Logger;
@@ -27,7 +28,7 @@ public class JavaTaskExecutor implements TaskExecutor {
 
             Process process = Runtime.getRuntime().exec("javac " + file.getName(), null, new File(file.getParent()));
             process.waitFor();
-
+           
             String error = getDataFromStream(process.getErrorStream());
 
             if (error.isEmpty()) {
@@ -77,7 +78,7 @@ public class JavaTaskExecutor implements TaskExecutor {
             return new String(byteArray);
         }
 
-        return "";
+        return Constants.EMPTY_STRING;
     }
 
 }

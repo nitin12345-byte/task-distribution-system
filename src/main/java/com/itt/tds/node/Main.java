@@ -1,25 +1,33 @@
 package com.itt.tds.node;
 
 import com.itt.tds.client.InvalidCommandException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import com.itt.tds.core.Constants;
 
 public class Main {
 
-    public static void main(String args[]) {
+    public static void main(String command[]) {
 
-        String arr[] = new String[2];
-        arr[0] = "add-capability";
-        arr[1] = "C";
-        args = arr;
+        command = new String[1];
+        command[0] = "start";
+        //command[1] = "";
 
-        if (args.length > 0) {
-            CommandExecutor commandExecutor = new CommandExecutor(args);
+        if (command.length > 0 && command.length < 3) {
             try {
-                commandExecutor.execute();
-            } catch (InvalidCommandException | ClassNotFoundException ex) {
-                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+                CommandExecutor commandExecutor = CommandExecutorFactory.getCommandExecutor(command[0]);
+                String commandParameter = getCommandParameter(command);
+                commandExecutor.executeCommand(commandParameter);
+            } catch (InvalidCommandException exception) {
+                Utils.showMessage(exception.getMessage());
             }
+        } else {
+            Utils.showMessage("invalid command");
         }
+    }
+
+    private static String getCommandParameter(String[] command) {
+        if (command.length > 1) {
+            return command[1];
+        }
+        return Constants.EMPTY_STRING;
     }
 }

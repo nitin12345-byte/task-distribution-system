@@ -26,7 +26,7 @@ public class ClientDAO implements IClientDAO {
     @Override
     public String save(Client client) throws RecordAlreadyExistException, DBException {
         String query = "INSERT INTO client(id, host_name,ip_address) VALUES(?,?,?)";
-        String id = "";
+        String id = Constants.EMPTY_STRING;
         try {
             PreparedStatement preparedStatement = dbConnection.prepareStatement(query);
             UUID uuid = UUID.randomUUID();
@@ -71,7 +71,7 @@ public class ClientDAO implements IClientDAO {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {
-                client.setId(resultSet.getString("id"));
+                client.setId(resultSet.getString(Constants.ID));
                 client.setHostName(resultSet.getString(Constants.HOST_NAME));
                 client.setIpAddress(resultSet.getString(Constants.IP_ADDRESS));
             }
@@ -95,7 +95,7 @@ public class ClientDAO implements IClientDAO {
 
             while (resultSet.next()) {
                 Client client = new Client();
-                client.setId(resultSet.getString("id"));
+                client.setId(resultSet.getString(Constants.ID));
                 client.setIpAddress(resultSet.getString(Constants.IP_ADDRESS));
                 client.setHostName(resultSet.getString(Constants.HOST_NAME));
                 clientList.add(client);

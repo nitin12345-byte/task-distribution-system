@@ -31,6 +31,7 @@ public class CapabilityDAO implements ICapabilityDAO {
             prepearedStatement.execute();
 
         } catch (SQLIntegrityConstraintViolationException exception) {
+            exception.printStackTrace();
             throw new RecordAlreadyExistException("Capability already added");
         } catch (SQLException exception) {
             throw new DBException(exception.getMessage());

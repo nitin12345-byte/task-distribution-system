@@ -4,6 +4,8 @@
  */
 package com.itt.tds.distributor;
 
+import com.itt.tds.core.Constants;
+
 /**
  *
  * @author nitin.jangid
@@ -20,6 +22,6 @@ public class Utils {
         } else if (fileName.endsWith(".py")) {
             return "PYTHON";
         }
-        return "";
+        return Constants.EMPTY_STRING;
     }
 }

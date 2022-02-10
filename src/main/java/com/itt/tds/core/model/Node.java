@@ -5,14 +5,14 @@ import java.io.Serializable;
 public class Node implements Serializable {
 
     private String id;
-    private String name;
+    private String hostName;
     private int portNumber;
     private String ipAddress;
     private String status;
 
     public Node() {
         id = "";
-        name = "";
+        hostName = "";
         portNumber = 0;
         ipAddress = "";
         status = "";
@@ -26,12 +26,12 @@ public class Node implements Serializable {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getHostName() {
+        return hostName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setHostName(String name) {
+        this.hostName = name;
     }
 
     public int getPortNumber() {

@@ -11,7 +11,6 @@ import com.itt.tds.distributor.db.dao.TaskDAO;
 import com.itt.tds.distributor.db.exceptions.DBException;
 import java.sql.Connection;
 import java.util.List;
-import java.util.logging.Level;
 
 public class TaskDispatcher implements Runnable {
 

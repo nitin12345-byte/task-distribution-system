@@ -2,6 +2,8 @@ package com.itt.tds.core;
 
 public class Constants {
 
+    public static final String EMPTY_STRING = "";
+
     //Response contansts
     public static final String ERROR_CODE = "error_code";
     public static final String ERROR_MESSAGE = "error_message";
@@ -23,6 +25,8 @@ public class Constants {
     public static final String NAME = "name";
     public static final String ID = "id";
     public static final String TASKS = "tasks";
+    public static String DATE_TIME = "date_time";
+    
     // Request Method Constants
     public static final String CLIENT_REGISTER = "client-register";
     public static final String CLIENT_UNREGISTER = "client-unregister";

@@ -15,14 +15,9 @@ public class RequestSender {
         TDSSerializer tdsSerializer = TDSSerializerFactory.getSerializer(TDSConfiguration.SERIALIZATION_FORMAT);
         String tdsRequestString = tdsSerializer.serialize(tdsRequest);
         dataOutputStream.writeUTF(tdsRequestString);
-        
-        DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
-
-        String tdsResponseString;
-
         System.out.println("Request sent");
-        tdsResponseString = dataInputStream.readUTF();
-
+        DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
+        String tdsResponseString = dataInputStream.readUTF();
         TDSResponse tdsResponse = (TDSResponse) tdsSerializer.deserialize(tdsResponseString);
 
         return tdsResponse;

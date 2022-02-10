@@ -8,8 +8,10 @@ public class TaskExecutorFactory {
             return new JavaTaskExecutor();
         } else if (fileName.endsWith(".cpp")) {
             return new CPPTaskExecutor();
-        } else if (fileName.endsWith(".exe")) {
-            return new EXETaskExecutor();
+        } else if (fileName.endsWith(".py")) {
+            return new PythonTaskExecutor();
+        } else if (fileName.endsWith(".c")) {
+            return new CTaskExecutor();
         }
 
         return null;

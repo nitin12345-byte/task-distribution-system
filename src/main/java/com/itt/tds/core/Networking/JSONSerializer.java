@@ -6,7 +6,6 @@ public class JSONSerializer implements TDSSerializer {
 
     @Override
     public String serialize(TDSProtocol tdsProtocol) {
-
         Gson gson = new Gson();
         String jsonString = gson.toJson(tdsProtocol);
         return jsonString;

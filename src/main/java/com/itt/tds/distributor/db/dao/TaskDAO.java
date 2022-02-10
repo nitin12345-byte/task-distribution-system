@@ -13,7 +13,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -29,7 +28,7 @@ public class TaskDAO implements ITaskDAO {
     @Override
     public String save(Task task) throws RecordAlreadyExistException, DBException {
 
-        String id = "";
+        String id = Constants.EMPTY_STRING;
 
         try {
             String query = "INSERT INTO task(id,client_id,status,file_path) VALUES(?,?,?,?)";
@@ -145,15 +144,14 @@ public class TaskDAO implements ITaskDAO {
                 task.setFilePath(resultSet.getString(Constants.FILE_PATH));
                 task.setNodeId(resultSet.getString(Constants.NODE_ID));
                 task.setStatus(TaskStatus.valueOf(resultSet.getString(Constants.STATUS)));
+                task.setDateTime(resultSet.getString(Constants.DATE_TIME));
                 taskList.add(task);
 
             }
         } catch (SQLException exception) {
-            exception.printStackTrace();
             throw new DBException();
         }
 
         return taskList;
     }
-
 }

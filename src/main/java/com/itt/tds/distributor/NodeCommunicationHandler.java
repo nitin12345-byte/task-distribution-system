@@ -106,6 +106,6 @@ class NodeCommunicationHandler implements Runnable {
         taskDAO.updateStatus(task.getId(), TaskStatus.COMPLETED.name());
         nodeDAO.updateStatus(node.getId(), NodeStatus.AVAILABLE.name());
         taskResultDAO.save(taskResult);
-
+        logger.logInfo("handleResponse", "Response from node handled successfuly");
     }
 }

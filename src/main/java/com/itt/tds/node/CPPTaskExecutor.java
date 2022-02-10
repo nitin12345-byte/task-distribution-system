@@ -1,5 +1,6 @@
 package com.itt.tds.node;
 
+import com.itt.tds.core.Constants;
 import com.itt.tds.core.model.TaskResult;
 import java.io.File;
 import java.io.IOException;
@@ -13,13 +14,14 @@ public class CPPTaskExecutor implements TaskExecutor {
 
         try {
 
-            Process process = Runtime.getRuntime().exec("javac " + file.getName(), null, new File(file.getParent()));
+            Process process = Runtime.getRuntime().exec("gcc " + file.getName(), null, new File(file.getParent()));
             process.waitFor();
 
             String error = getDataFromStream(process.getErrorStream());
+            String exeFile = getFileNameWithoutExtention(file.getName()) + ".exe";
 
             if (error.isEmpty()) {
-                process = Runtime.getRuntime().exec("java " + file.getName(), null, new File(file.getParent()));
+                process = Runtime.getRuntime().exec(exeFile, null, new File(file.getParent()));
                 process.waitFor();
 
                 error = getDataFromStream(process.getErrorStream());
@@ -54,6 +56,11 @@ public class CPPTaskExecutor implements TaskExecutor {
             return new String(byteArray);
         }
 
-        return "";
+        return Constants.EMPTY_STRING;
+    }
+
+    private String getFileNameWithoutExtention(String fileName) {
+        int endIndex = fileName.lastIndexOf(".");
+        return fileName.substring(0, endIndex);
     }
 }

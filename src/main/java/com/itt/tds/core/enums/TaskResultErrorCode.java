@@ -8,7 +8,7 @@ public enum TaskResultErrorCode {
     public int getValue() {
         return value;
     }
-
+   
     private TaskResultErrorCode(int code) {
         this.value = code;
     }

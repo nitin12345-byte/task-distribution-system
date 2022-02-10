@@ -11,6 +11,7 @@ public class Logger {
         this.className = className;
     }
 
+    
     public void logError(String methodName, String message) {
         System.out.println(getFormattedString("ERROR", methodName, message));
     }
