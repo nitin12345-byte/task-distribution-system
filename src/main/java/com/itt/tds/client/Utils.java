@@ -1,5 +1,7 @@
 package com.itt.tds.client;
 
+import com.itt.tds.core.model.TDSDistributorConfiguration;
+
 /**
  *
  * @author nitin.jangid
@@ -15,4 +17,7 @@ public class Utils {
         return !clientId.isEmpty();
     }
 
+    public static boolean isDistributorConfigured(TDSDistributorConfiguration configuration) {
+        return !(configuration.getDistributorIpAddress().isEmpty() || configuration.getDistributorPortNumber() == 0);
+    }
 }

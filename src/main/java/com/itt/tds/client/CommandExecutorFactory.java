@@ -1,10 +1,10 @@
 package com.itt.tds.client;
 
 public class CommandExecutorFactory {
-
+    
     public static CommandExecutor getCommandExecutor(String command) throws InvalidCommandException {
         CommandExecutor commandExecutor;
-
+        
         if (command.equalsIgnoreCase("register")) {
             commandExecutor = new RegisterCommandExecutor();
         } else if (command.equalsIgnoreCase("unregister")) {
@@ -19,10 +19,11 @@ public class CommandExecutorFactory {
             commandExecutor = new StatusCommandExecutor();
         } else if (command.equalsIgnoreCase("help")) {
             commandExecutor = new HelpCommandExecutor();
+        } else if (command.equalsIgnoreCase("config")) {
+            commandExecutor = new ConfigurationCommandExecutor();
         } else {
             throw new InvalidCommandException();
         }
-
         return commandExecutor;
     }
 }

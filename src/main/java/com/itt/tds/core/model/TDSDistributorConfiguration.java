@@ -1,19 +1,17 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-package com.itt.tds.node;
+package com.itt.tds.core.model;
 
+import com.itt.tds.core.Constants;
 import java.io.Serializable;
 
-/**
- *
- * @author nitin.jangid
- */
-public class TDSNodeConfiguration {
-   public class TDSClientConfiguration implements Serializable{
+public class TDSDistributorConfiguration implements Serializable {
+
     private String distributorIpAddress;
     private int distributorPortNumber;
+
+    public TDSDistributorConfiguration() {
+        distributorIpAddress = Constants.EMPTY_STRING;
+        distributorPortNumber = 40;
+    }
 
     public String getDistributorIpAddress() {
         return distributorIpAddress;
@@ -30,5 +28,4 @@ public class TDSNodeConfiguration {
     public void setDistributorPortNumber(int distributorPortNumber) {
         this.distributorPortNumber = distributorPortNumber;
     }
-  } 
 }

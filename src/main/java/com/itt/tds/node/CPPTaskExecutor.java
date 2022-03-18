@@ -1,12 +1,22 @@
 package com.itt.tds.node;
 
 import com.itt.tds.core.Constants;
+import com.itt.tds.core.enums.TaskResultErrorCode;
+import com.itt.tds.core.logging.LogManager;
+import com.itt.tds.core.logging.Logger;
 import com.itt.tds.core.model.TaskResult;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.concurrent.TimeUnit;
 
 public class CPPTaskExecutor implements TaskExecutor {
+
+    private Logger logger;
+
+    public CPPTaskExecutor() {
+        logger = LogManager.getLogger(this.getClass().getName());
+    }
 
     @Override
     public TaskResult execute(File file) {
@@ -14,35 +24,47 @@ public class CPPTaskExecutor implements TaskExecutor {
 
         try {
 
-            Process process = Runtime.getRuntime().exec("gcc " + file.getName(), null, new File(file.getParent()));
+            logger.logInfo("execute", "CPPTaskexecutor is executing the java file");
+
+            Process process = Runtime.getRuntime().exec("g++ " + file.getName(), null, new File(file.getParent()));
             process.waitFor();
 
             String error = getDataFromStream(process.getErrorStream());
-            String exeFile = getFileNameWithoutExtention(file.getName()) + ".exe";
 
             if (error.isEmpty()) {
-                process = Runtime.getRuntime().exec(exeFile, null, new File(file.getParent()));
-                process.waitFor();
+                process = Runtime.getRuntime().exec(file.getParent() + "\\a.exe");
+                boolean isProccessExecutedInTimeLimit = process.waitFor(10, TimeUnit.SECONDS);
 
-                error = getDataFromStream(process.getErrorStream());
-                String output = getDataFromStream(process.getInputStream());
-                System.out.println("Result : " + output);
+                if (isProccessExecutedInTimeLimit) {
+                    error = getDataFromStream(process.getErrorStream());
+                    String output = getDataFromStream(process.getInputStream());
 
-                if (error.isEmpty()) {
-                    taskResult.setResult(output);
+                    logger.logInfo("result", output);
 
+                    if (error.isEmpty()) {
+                        taskResult.setResult(output);
+
+                    } else {
+                        taskResult.setErrorCode(TaskResultErrorCode.RUN_TIME_ERROR.getValue());
+                        taskResult.setErrorMessage(error);
+                        logger.logInfo("execute", "Runtime error occured + \n" + error);
+                    }
                 } else {
-                    taskResult.setErrorCode(1);
-                    taskResult.setErrorMessage(error);
+                    process.destroyForcibly();
+                    taskResult.setErrorCode(TaskResultErrorCode.EXECUTION_TIME_EXCEED_ERROR.getValue());
+                    taskResult.setErrorMessage("Execution time exceed");
+                    logger.logInfo("execute", "execution time exceed");
                 }
 
             } else {
-                taskResult.setErrorCode(2);
+                taskResult.setErrorCode(TaskResultErrorCode.COMPILE_TIME_ERROR.getValue());
                 taskResult.setErrorMessage(error);
+                logger.logInfo("execute", "Compile time error occured + \n" + error);
+
             }
 
         } catch (Exception exception) {
-            exception.printStackTrace();
+            logger.logError("execute", "Unknown error occured", exception);
         }
 
         return taskResult;
@@ -59,8 +81,4 @@ public class CPPTaskExecutor implements TaskExecutor {
         return Constants.EMPTY_STRING;
     }
 
-    private String getFileNameWithoutExtention(String fileName) {
-        int endIndex = fileName.lastIndexOf(".");
-        return fileName.substring(0, endIndex);
-    }
 }

@@ -7,6 +7,7 @@ import com.itt.tds.core.Networking.TDSRequest;
 import com.itt.tds.core.Networking.TDSResponse;
 import com.itt.tds.core.config.TDSConfiguration;
 import com.itt.tds.core.enums.ResponseStatus;
+import com.itt.tds.core.model.TDSDistributorConfiguration;
 import java.io.IOException;
 
 /**
@@ -16,14 +17,15 @@ import java.io.IOException;
 public class UnregisterCommandExecutor implements CommandExecutor {
 
     @Override
-    public void executeCommand(String parameter) throws InvalidCommandException {
-        if (parameter.isEmpty()) {
+    public void executeCommand(String[] parameters) throws InvalidCommandException {
+        if (parameters.length == 0) {
             NodeIdFileProcessor fileProcessor = new NodeIdFileProcessor();
             String nodeId = fileProcessor.read();
             if (Utils.isNodeRegistered()) {
+                TDSDistributorConfiguration configuration = new TDSDistributorConfigurationFileProcessor().read();
                 TDSRequest tdsRequest = new TDSRequest();
-                tdsRequest.setDestinationIp(TDSConfiguration.DISTRIBUTOR_IP_ADDRESS);
-                tdsRequest.setDestinationPort(TDSConfiguration.DISTRIBUTOR_PORT_NUMBER);
+                tdsRequest.setDestinationIp(configuration.getDistributorIpAddress());
+                tdsRequest.setDestinationPort(configuration.getDistributorPortNumber());
                 tdsRequest.setMethod(Constants.NODE_UNREGISTER);
                 tdsRequest.setParameter(Constants.NODE_ID, nodeId);
                 try {

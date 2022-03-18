@@ -5,7 +5,7 @@ import com.itt.tds.core.Constants;
 import com.itt.tds.core.Networking.RequestSender;
 import com.itt.tds.core.Networking.TDSRequest;
 import com.itt.tds.core.Networking.TDSResponse;
-import com.itt.tds.core.config.TDSConfiguration;
+import com.itt.tds.core.model.TDSDistributorConfiguration;
 import com.itt.tds.core.enums.ResponseStatus;
 import java.io.IOException;
 
@@ -16,19 +16,20 @@ import java.io.IOException;
 public class RemoveCapabilityCommandExecutor implements CommandExecutor {
 
     @Override
-    public void executeCommand(String parameter) throws InvalidCommandException {
+    public void executeCommand(String[] parameters) throws InvalidCommandException {
         String nodeId = new NodeIdFileProcessor().read();
-        if (!parameter.isEmpty()) {
+        if (parameters.length == 1) {
+
             if (Utils.isNodeRegistered()) {
-                String capability = parameter;
+                String capability = parameters[0];
                 if (isValidCapability(capability)) {
+                    TDSDistributorConfiguration configuration = new TDSDistributorConfigurationFileProcessor().read();
                     TDSRequest tdsRequest = new TDSRequest();
-                    tdsRequest.setDestinationIp(TDSConfiguration.DISTRIBUTOR_IP_ADDRESS);
-                    tdsRequest.setDestinationPort(TDSConfiguration.DISTRIBUTOR_PORT_NUMBER);
+                    tdsRequest.setDestinationIp(configuration.getDistributorIpAddress());
+                    tdsRequest.setDestinationPort(configuration.getDistributorPortNumber());
                     tdsRequest.setMethod(Constants.NODE_REMOVE_CAPABILITY);
                     tdsRequest.setParameter(Constants.NODE_ID, nodeId);
                     tdsRequest.setParameter(Constants.CAPABILITY_NAME, capability);
-
                     try {
                         TDSResponse tdsResponse = RequestSender.sendRequest(tdsRequest);
                         if (tdsResponse.getStatus() == ResponseStatus.OK.getValue()) {
@@ -39,7 +40,6 @@ public class RemoveCapabilityCommandExecutor implements CommandExecutor {
                     } catch (IOException | ClassNotFoundException ex) {
                         Utils.showMessage("Connection failed with distributor");
                     }
-
                 }
             } else {
                 Utils.showMessage("Please register the node first.");

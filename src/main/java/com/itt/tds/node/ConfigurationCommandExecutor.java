@@ -1,5 +1,6 @@
-package com.itt.tds.client;
+package com.itt.tds.node;
 
+import com.itt.tds.client.*;
 import com.itt.tds.core.model.TDSDistributorConfiguration;
 
 /**
@@ -31,7 +32,7 @@ public class ConfigurationCommandExecutor implements CommandExecutor {
                 int portNumber = Integer.parseInt(parameters[1]);
                 tdsClientConfiguration.setDistributorPortNumber(portNumber);
                 fileProcessor.write(tdsClientConfiguration);
-            } catch (Exception exep) {
+            } catch (Exception exception) {
                 throw new InvalidCommandException();
             }
         } else {

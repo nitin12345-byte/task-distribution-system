@@ -4,5 +4,5 @@ import com.itt.tds.client.InvalidCommandException;
 
 public interface CommandExecutor {
 
-    public void executeCommand(String paramter) throws InvalidCommandException;
+    public void executeCommand(String[] paramters) throws InvalidCommandException;
 }

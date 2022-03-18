@@ -1,11 +1,11 @@
 package com.itt.tds.client;
 
+import com.itt.tds.core.model.TDSDistributorConfiguration;
 import com.google.gson.internal.LinkedTreeMap;
 import com.itt.tds.core.Constants;
 import com.itt.tds.core.Networking.RequestSender;
 import com.itt.tds.core.Networking.TDSRequest;
 import com.itt.tds.core.Networking.TDSResponse;
-import com.itt.tds.core.config.TDSConfiguration;
 import com.itt.tds.core.enums.ResponseStatus;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -18,17 +18,18 @@ import java.util.List;
 public class TasksCommandExecutor implements CommandExecutor {
 
     @Override
-    public void executeCommand(String parameter) throws InvalidCommandException {
+    public void executeCommand(String[] parameters) throws InvalidCommandException {
 
-        if (parameter.isEmpty()) {
+        if (parameters.length == 0) {
             ClientIdFileProcessor fileProcessor = new ClientIdFileProcessor();
             String clientId = fileProcessor.read();
             if (Utils.isClientRegistered()) {
+                TDSDistributorConfiguration configuration = new TDSDistributorConfigurationFileProcessor().read();
                 TDSRequest tdsRequest = new TDSRequest();
                 tdsRequest.setMethod(Constants.CLIENT_TASKS);
                 tdsRequest.setParameter(Constants.CLIENT_ID, clientId);
-                tdsRequest.setDestinationIp(TDSConfiguration.DISTRIBUTOR_IP_ADDRESS);
-                tdsRequest.setDestinationPort(TDSConfiguration.DISTRIBUTOR_PORT_NUMBER);
+                tdsRequest.setDestinationIp(configuration.getDistributorIpAddress());
+                tdsRequest.setDestinationPort(configuration.getDistributorPortNumber());
                 try {
                     TDSResponse tdsResponse = RequestSender.sendRequest(tdsRequest);
                     if (tdsResponse.getStatus() == ResponseStatus.OK.getValue()) {
@@ -41,8 +42,8 @@ public class TasksCommandExecutor implements CommandExecutor {
                     } else {
                         Utils.showMessage(tdsResponse.getErrorMessage());
                     }
-                } catch (IOException | ClassNotFoundException ex) {
-                    Utils.showMessage("Connection with distributore is interrupted");
+                } catch (IOException | ClassNotFoundException exception) {
+                    Utils.showMessage(exception.getMessage());
                 }
             } else {
                 showMessage("Please register the client first");

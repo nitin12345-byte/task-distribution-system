@@ -78,7 +78,9 @@ public class TaskDAO implements ITaskDAO {
             PreparedStatement preparedStatement;
             preparedStatement = dbConnection.prepareStatement(query);
             preparedStatement.setString(1, id);
+            System.out.print(id);
             ResultSet resultSet = preparedStatement.executeQuery();
+            
             if (resultSet.next()) {
                 task.setId(resultSet.getString(Constants.ID));
                 task.setClientId(resultSet.getString(Constants.CLIENT_ID));
@@ -94,6 +96,7 @@ public class TaskDAO implements ITaskDAO {
                 throw new RecordNotFoundException();
             }
         } catch (SQLException exception) {
+            exception.printStackTrace();
             throw new DBException();
         }
 

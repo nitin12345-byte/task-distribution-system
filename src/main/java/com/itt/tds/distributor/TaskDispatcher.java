@@ -39,6 +39,7 @@ public class TaskDispatcher implements Runnable {
                     nodeList = nodeDAO.getAllAvailableNodesFor(Utils.getCapabilityFromFileName(task.getFilePath()));
                     if (nodeList.size() > 0) {
                         Node node = nodeList.get(0);
+                        nodeList.clear();
                         taskDAO.updateNodeId(task.getId(), node.getId());
                         nodeDAO.updateStatus(node.getId(), NodeStatus.BUSY.name());
                         NodeCommunicationHandler nodeCommunicationHandler = new NodeCommunicationHandler(task, node);

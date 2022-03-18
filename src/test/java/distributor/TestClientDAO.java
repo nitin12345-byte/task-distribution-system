@@ -1,10 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package distributor;
 
 import com.itt.tds.core.model.Client;
+import com.itt.tds.distributor.db.exceptions.DBException;
 import com.itt.tds.distributor.db.dao.ClientDAO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -48,7 +45,7 @@ public class TestClientDAO {
     }
 
     @Test
-    public void TestSaveClient() throws SQLException {
+    public void TestSaveClient() throws DBException, SQLException {
         lenient().when(connection.prepareStatement(any(String.class))).thenReturn(preparedStatement);
         lenient().doNothing().when(preparedStatement).setString(any(int.class), any(String.class));
         lenient().doNothing().when(preparedStatement).setInt(any(int.class), any(int.class));
@@ -58,38 +55,37 @@ public class TestClientDAO {
     }
 
     @Test
-    public void TestDeleteClient() throws SQLException {
+    public void TestDeleteClient() throws DBException, SQLException {
         when(preparedStatement.execute()).thenReturn(true);
         when(connection.prepareStatement(any(String.class))).thenReturn(preparedStatement);
-        doNothing().when(preparedStatement).setLong(any(int.class), any(long.class));
-        clientDAO.delete(123);
+        doNothing().when(preparedStatement).setString(any(int.class), any(String.class));
+        clientDAO.delete("");
         verify(preparedStatement, atLeast(1)).execute();
     }
 
     @Test
-    public void TestGetAllClient() throws SQLException {
+    public void TestGetAllClient() throws DBException, SQLException {
         when(resultSet.next()).thenReturn(true).thenReturn(false);
-        when(resultSet.getLong("id")).thenReturn(12L);
-        when(resultSet.getInt("port_number")).thenReturn(40);
-        when(resultSet.getString("ip_address")).thenReturn("192.168.20.142");
-        when(resultSet.getString("name")).thenReturn("nitin.jangid");
-        when(statement.executeQuery(any(String.class))).thenReturn(resultSet);
-        when(connection.createStatement()).thenReturn(statement);
+        lenient().when(resultSet.getString("id")).thenReturn("1234-zw12-1234-wert");
+        lenient().when(resultSet.getInt("port_number")).thenReturn(40);
+        lenient().when(resultSet.getString("ip_address")).thenReturn("192.168.20.142");
+        lenient().when(resultSet.getString("name")).thenReturn("nitin.jangid");
+        lenient().when(statement.executeQuery(any(String.class))).thenReturn(resultSet);
+        lenient().when(connection.createStatement()).thenReturn(statement);
         List<Client> clientList = clientDAO.getAllClients();
         Assert.assertEquals(1, clientList.size());
     }
 
     @Test
-    public void TestGetClient() throws SQLException {
-        when(resultSet.next()).thenReturn(true).thenReturn(false);
-        when(resultSet.getLong("id")).thenReturn(12L);
-        when(resultSet.getInt("port_number")).thenReturn(40);
-        when(resultSet.getString("ip_address")).thenReturn("192.168.20.142");
-        when(resultSet.getString("name")).thenReturn("nitin.jangid");
-        when(preparedStatement.executeQuery()).thenReturn(resultSet);
-        when(connection.prepareStatement(any(String.class))).thenReturn(preparedStatement);
-        Client client = clientDAO.getClient(12);
-        Assert.assertEquals(12, client.getId());
-
+    public void TestGetClient() throws DBException, SQLException {
+        lenient().when(resultSet.next()).thenReturn(true).thenReturn(false);
+        lenient().when(resultSet.getString("id")).thenReturn("1234-zw12-1234-wert");
+        lenient().when(resultSet.getInt("port_number")).thenReturn(40);
+        lenient().when(resultSet.getString("ip_address")).thenReturn("192.168.20.142");
+        lenient().when(resultSet.getString("name")).thenReturn("nitin.jangid");
+        lenient().when(preparedStatement.executeQuery()).thenReturn(resultSet);
+        lenient().when(connection.prepareStatement(any(String.class))).thenReturn(preparedStatement);
+        Client client = clientDAO.getClient("1234-zw12-1234-wert");
+        Assert.assertEquals("1234-zw12-1234-wert", client.getId());
     }
 }

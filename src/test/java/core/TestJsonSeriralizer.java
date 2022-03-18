@@ -18,7 +18,7 @@ public class TestJsonSeriralizer {
         tdsRequest.setDestinationIp("localhost");
         tdsRequest.setDestinationPort(40);
         tdsRequest.setParameter("name", "ITT-NITINJ");
-        String expected = "{\"method\":\"node-add\",\"parameters\":{\"name\":\"ITT-NITINJ\"},\"destinationIp\":\"localhost\",\"destinationPort\":40,\"sourcePort\":0,\"headers\":{},\"protocolType\":\"request\"}";
+        String expected = "{\"method\":\"node-add\",\"parameters\":{\"name\":\"ITT-NITINJ\"},\"destinationIp\":\"localhost\",\"destinationPort\":40,\"headers\":{},\"protocolType\":\"request\"}";
 
         //act
         String serializedTDSRequest = tdsSerializer.serialize(tdsRequest);
@@ -40,7 +40,7 @@ public class TestJsonSeriralizer {
         //assert
         Assert.assertEquals("node-add", tdsRequest.getMethod());
         Assert.assertEquals("localhost", tdsRequest.getDestinationIp());
-        Assert.assertEquals(40, (int) tdsRequest.getDestinationPort());
+        Assert.assertEquals(40, tdsRequest.getDestinationPort());
     }
 
 }

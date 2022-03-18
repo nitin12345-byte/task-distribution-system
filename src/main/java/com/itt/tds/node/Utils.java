@@ -1,5 +1,7 @@
 package com.itt.tds.node;
 
+import com.itt.tds.core.model.TDSDistributorConfiguration;
+
 /**
  *
  * @author nitin.jangid
@@ -13,5 +15,9 @@ public class Utils {
 
     public static void showMessage(String message) {
         System.out.println(message);
+    }
+
+    public static boolean isDistributorConfigured(TDSDistributorConfiguration configuration) {
+        return !(configuration.getDistributorIpAddress().isEmpty() || configuration.getDistributorPortNumber() == 0);
     }
 }

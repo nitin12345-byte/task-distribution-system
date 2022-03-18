@@ -7,7 +7,7 @@ import com.itt.tds.client.InvalidCommandException;
  * @author nitin.jangid
  */
 public class CommandExecutorFactory {
-
+    
     public static CommandExecutor getCommandExecutor(String command) throws InvalidCommandException {
         CommandExecutor commandExecutor = null;
         if (command.equalsIgnoreCase("register")) {
@@ -18,11 +18,13 @@ public class CommandExecutorFactory {
             commandExecutor = new RemoveCapabilityCommandExecutor();
         } else if (command.equalsIgnoreCase("start")) {
             commandExecutor = new StartCommandExecutor();
-        }
-        else if (command.equalsIgnoreCase("unregister")){
+        } else if (command.equalsIgnoreCase("config")) {
+            commandExecutor = new ConfigurationCommandExecutor();
+        } else if (command.equalsIgnoreCase("unregister")) {
             commandExecutor = new UnregisterCommandExecutor();
-        }
-        else {
+        } else if (command.equalsIgnoreCase("help")) {
+            commandExecutor = new HelpCommandExecutor();
+        } else {
             throw new InvalidCommandException();
         }
         return commandExecutor;

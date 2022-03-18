@@ -7,6 +7,7 @@ import com.itt.tds.core.Networking.TDSRequest;
 import com.itt.tds.core.Networking.TDSResponse;
 import com.itt.tds.core.config.TDSConfiguration;
 import com.itt.tds.core.enums.ResponseStatus;
+import com.itt.tds.core.model.TDSDistributorConfiguration;
 import java.io.IOException;
 
 /**
@@ -16,15 +17,20 @@ import java.io.IOException;
 public class AddCapabilityCommandExecutor implements CommandExecutor {
 
     @Override
-    public void executeCommand(String parameter) throws InvalidCommandException {
-        if (!parameter.isEmpty()) {
-            String capability = parameter;
-            if (isValidCapability(capability)) {
-                if (isEnvironmentExist(capability)) {
-                    sendRequstToAddCapability(capability);
-                } else {
-                    showMessage("The System does not have enviroment for " + capability);
+    public void executeCommand(String[] parameters) throws InvalidCommandException {
+        if (parameters.length == 1) {
+            String capability = parameters[0];
+            if (Utils.isNodeRegistered()) {
+
+                if (isValidCapability(capability)) {
+                    if (isEnvironmentExist(capability)) {
+                        sendRequstToAddCapability(capability);
+                    } else {
+                        Utils.showMessage("The System does not have enviroment for " + capability);
+                    }
                 }
+            } else {
+                Utils.showMessage("Please register the node first");
             }
         } else {
             throw new InvalidCommandException();
@@ -33,10 +39,11 @@ public class AddCapabilityCommandExecutor implements CommandExecutor {
 
     private void sendRequstToAddCapability(String capability) {
         String nodeId = new NodeIdFileProcessor().read();
-        if (!nodeId.isEmpty()) {
+        if (Utils.isNodeRegistered()) {
+            TDSDistributorConfiguration configuration = new TDSDistributorConfigurationFileProcessor().read();
             TDSRequest tdsRequest = new TDSRequest();
-            tdsRequest.setDestinationIp(TDSConfiguration.DISTRIBUTOR_IP_ADDRESS);
-            tdsRequest.setDestinationPort(TDSConfiguration.DISTRIBUTOR_PORT_NUMBER);
+            tdsRequest.setDestinationIp(configuration.getDistributorIpAddress());
+            tdsRequest.setDestinationPort(configuration.getDistributorPortNumber());
             tdsRequest.setMethod(Constants.NODE_ADD_CAPABILITY);
             tdsRequest.setParameter(Constants.NODE_ID, nodeId);
             tdsRequest.setParameter(Constants.CAPABILITY_NAME, capability);
@@ -44,15 +51,15 @@ public class AddCapabilityCommandExecutor implements CommandExecutor {
             try {
                 TDSResponse tdsResponse = RequestSender.sendRequest(tdsRequest);
                 if (tdsResponse.getStatus() == ResponseStatus.OK.getValue()) {
-                    System.out.println("Capability added successfuly");
+                    Utils.showMessage("Capability added successfuly");
                 } else {
-                    System.out.print(tdsResponse.getErrorMessage());
+                    Utils.showMessage(tdsResponse.getErrorMessage());
                 }
             } catch (IOException | ClassNotFoundException ex) {
-                System.out.println("Connection failed with distributor");
+                Utils.showMessage("Connection failed with distributor");
             }
         } else {
-            showMessage("Please register the node first.");
+            Utils.showMessage("Please register the node first.");
         }
     }
 
@@ -69,9 +76,4 @@ public class AddCapabilityCommandExecutor implements CommandExecutor {
         EnvironmentChecker environmetChecker = new EnvironmentChecker();
         return environmetChecker.checkEnvironmentFor(capability);
     }
-
-    private void showMessage(String message) {
-        System.out.println(message);
-    }
-
 }

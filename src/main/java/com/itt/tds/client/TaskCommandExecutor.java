@@ -1,5 +1,6 @@
 package com.itt.tds.client;
 
+import com.itt.tds.core.model.TDSDistributorConfiguration;
 import com.itt.tds.core.Constants;
 import com.itt.tds.core.Networking.RequestSender;
 import com.itt.tds.core.Networking.TDSRequest;
@@ -20,14 +21,16 @@ import java.util.Base64;
 public class TaskCommandExecutor implements CommandExecutor {
 
     @Override
-    public void executeCommand(String parameter) throws InvalidCommandException {
-        if (!parameter.isEmpty()) {
-            String file = parameter;
+    public void executeCommand(String[] parameters) throws InvalidCommandException {
+        if (parameters.length == 1) {
+            String file = parameters[0];
             ClientIdFileProcessor fileProcessor = new ClientIdFileProcessor();
             String clientId = fileProcessor.read();
-            if (!clientId.isEmpty()) {
+
+            if (Utils.isClientRegistered()) {
                 try {
                     String base64String = fileToBase64String(file);
+                    TDSDistributorConfiguration configuration = new TDSDistributorConfigurationFileProcessor().read();
                     TDSRequest tdsRequest = new TDSRequest();
                     tdsRequest.setParameter(Constants.DATA, base64String);
                     tdsRequest.setParameter(Constants.TASK_STATUS, TaskStatus.PENDING.name());
@@ -46,7 +49,7 @@ public class TaskCommandExecutor implements CommandExecutor {
                     showMessage(exp.getMessage());
                 }
             } else {
-                showMessage("Plese register the client first");
+                Utils.showMessage("Please configured the distributor first");
             }
         } else {
             throw new InvalidCommandException();

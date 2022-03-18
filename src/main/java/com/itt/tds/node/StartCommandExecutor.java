@@ -8,6 +8,7 @@ import com.itt.tds.core.Networking.TDSResponse;
 import com.itt.tds.core.Networking.TDSSerializer;
 import com.itt.tds.core.Networking.TDSSerializerFactory;
 import com.itt.tds.core.config.TDSConfiguration;
+import com.itt.tds.core.model.TDSDistributorConfiguration;
 import com.itt.tds.core.enums.ResponseStatus;
 import com.itt.tds.core.enums.TDSResponseErrorCode;
 import com.itt.tds.core.logging.LogManager;
@@ -42,8 +43,8 @@ public class StartCommandExecutor implements CommandExecutor {
     }
 
     @Override
-    public void executeCommand(String parameter) throws InvalidCommandException {
-        if (parameter.isEmpty()) {
+    public void executeCommand(String[] parameters) throws InvalidCommandException {
+        if (parameters.length == 0) {
             if (Utils.isNodeRegistered()) {
                 boolean isSent = sendHeartBeat();
                 if (isSent == true) {
@@ -132,12 +133,13 @@ public class StartCommandExecutor implements CommandExecutor {
 
     private boolean sendHeartBeat() {
         try {
+            TDSDistributorConfiguration configuration = new TDSDistributorConfigurationFileProcessor().read();
             InetAddress address = InetAddress.getLocalHost();
             String ipAddress = address.getHostAddress();
             TDSRequest tdsRequest = new TDSRequest();
             tdsRequest.setMethod(Constants.NODE_HEARTBEAT);
-            tdsRequest.setDestinationIp(TDSConfiguration.DISTRIBUTOR_IP_ADDRESS);
-            tdsRequest.setDestinationPort(TDSConfiguration.DISTRIBUTOR_PORT_NUMBER);
+            tdsRequest.setDestinationIp(configuration.getDistributorIpAddress());
+            tdsRequest.setDestinationPort(configuration.getDistributorPortNumber());
             tdsRequest.setParameter(Constants.NODE_ID, nodeId);
             tdsRequest.setParameter(Constants.IP_ADDRESS, ipAddress);
 
@@ -146,7 +148,7 @@ public class StartCommandExecutor implements CommandExecutor {
                 if (tdsResponse.getStatus() == ResponseStatus.OK.getValue()) {
                     return true;
                 } else {
-                    System.out.print(tdsResponse.getErrorMessage());
+                    Utils.showMessage(tdsResponse.getErrorMessage());
                     return false;
                 }
             } catch (Exception expception) {

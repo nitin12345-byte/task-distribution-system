@@ -123,7 +123,7 @@ public class NodeDAO implements INodeDAO {
             String query = "SELECT node.id,node.host_name,node.status,node.port_number,"
                     + "node.ip_address,capability.name FROM node INNER "
                     + "JOIN capability ON node.status = 'AVAILABLE'"
-                    + " AND capability.name = ?";
+                    + " AND capability.name = ?  AND capability.node_id = node.id";
 
             PreparedStatement preparedStatement = dbConnection.prepareStatement(query);
             preparedStatement.setString(1, capability);
@@ -139,7 +139,8 @@ public class NodeDAO implements INodeDAO {
                 nodeList.add(node);
             }
         } catch (SQLException exception) {
-            throw new DBException();
+            
+            throw new DBException(exception.getMessage());
         }
 
         return nodeList;
@@ -155,7 +156,7 @@ public class NodeDAO implements INodeDAO {
             String query = "SELECT node.id,node.port_number,node.ip_address,"
                     + "node.status,node.host_name,capability.name FROM node INNER "
                     + "JOIN capability ON node.status IN ('BUSY','AVAILABLE')"
-                    + " AND capability.name = ?";
+                    + " AND capability.name = ? AND capability.node_id = node.id";
 
             PreparedStatement preparedStatement = dbConnection.prepareStatement(query);
             preparedStatement.setString(1, capability);
